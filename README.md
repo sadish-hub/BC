@@ -13,7 +13,7 @@ Since its code first approach, you dont need to create tables. Go to Migrations 
 
 Before you execute commands, go and change the connectionstring in the appsettings.development.json
 
-I'm still looking for neat way of doing automatic migrations of EF Core 3.0. Untill then, Execute the below commands in the order to create the tables in the db
+I'm still looking for neat way of doing automatic migrations of EF Core 3.0. Untill then, Execute the below commands in the order to create the tables in the db. If EF commands are not working run "dotnet tool install --global dotnet-ef --version 3.0.0"
 
 dotnet ef migrations add InitialMigration --context BrightChoiceContext
 dotnet ef database update --context BrightChoiceContext
