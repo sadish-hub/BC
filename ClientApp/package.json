@@ -1,0 +1,56 @@
+{
+  "name": "bright_choice_api",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.24",
+    "@fortawesome/free-solid-svg-icons": "^5.11.1",
+    "@fortawesome/react-fontawesome": "^0.1.4",
+    "ag-grid-community": "^21.2.1",
+    "ag-grid-react": "^21.2.1",
+    "axios": "^0.19.0",
+    "bootstrap": "^4.3.1",
+    "jquery": "3.3.1",
+    "lodash": "^4.17.15",
+    "query-string": "^6.8.3",
+    "react": "^16.9.0",
+    "react-bootstrap-typeahead": "^3.4.6",
+    "react-dom": "^16.9.0",
+    "react-redux": "^5.0.6",
+    "react-router-bootstrap": "^0.24.4",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.8",
+    "react-scripts": "3.1.1",
+    "react-select": "^3.0.4",
+    "reactstrap": "^6.3.0",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "rimraf": "^2.7.1"
+  },
+  "devDependencies": {
+    "ajv": "^6.0.0",
+    "cross-env": "^5.2.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "start": "rimraf ./build && react-scripts start",
+    "build": "react-scripts build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
