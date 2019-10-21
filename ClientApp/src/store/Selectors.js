@@ -33,6 +33,12 @@ export function getHasVechicleChanged(state) {
   return state.vechicle.edit.changed;
 }
 
+export function getVariants(state) {
+  return state.vechicle.vechicleItems;
+}
+
+export const getVechicleDashboardData = (state) => state.vechicle.dashboard.data;
+
 export function getVechicles(state) {
   return state.customer.vechicleItems;
 }
@@ -55,3 +61,17 @@ export function getEnquiryCustomers(state) {
 }
 
 export const getEnquiryDashboardData = (state) => state.enquiry.dashboard.data;
+
+//DaliyReport
+export function getDailyReportEdit(state) {
+  return state.dailyReport.edit.data;
+}
+
+export const getDailyReportDashboardData = (state) => state.dailyReport.dashboard.data;
+
+//Variant
+export function getVariantEdit(state) {
+  return state.variant.edit.data;
+}
+
+export const getVariantDashboardData = (state) => state.variant.dashboard.data;

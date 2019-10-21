@@ -1,40 +1,44 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using bright_choice.Context.Models;
+using Newtonsoft.Json;
 
 namespace bright_choice.DTO {
 
     public class VechicleDTO {
         public Guid Id { get; set; }
 
-        [Required]
+        public Guid VechicleVariantId { get; set; }
+
+        public VechicleVariantDTO VechicleVariant { get; set; }
+
         public CarInventoryEnum Inventory { get; set; } = CarInventoryEnum.onPremise;
 
-        [MaxLength (200)]
-        [Required]
-        public string Make { get; set; }
+        public int? Year { get; set; }
 
         [MaxLength (200)]
-        [Required]
-        public string Model { get; set; }
-
-        public string Variant { get; set; }
-
-        [MaxLength (200)]
-        [Required]
         public string VechicleNumber { get; set; }
 
-        public int? Year { get; set; }
-        public Decimal? Price { get; set; }
+        public int? Kilometer { get; set; }
+        public string Registration { get; set; }
 
-        public string Offer { get; set; }
+        public Decimal? Budget { get; set; }
 
-        public string City { get; set; }
-        public Decimal? EXShowRoomPrice { get; set; }
-        public Decimal? OnRoadPrice { get; set; }
-        public Decimal? CurrentPrice { get; set; }
+        [MaxLength (100)]
+        public string SellerName { get; set; }
+
+        [MaxLength (20)]
+        public string SellerContactNumber { get; set; }
+
+        public bool? RC { get; set; }
+
+        public bool? Insurance { get; set; }
         public CarStatusEnum Status { get; set; } = CarStatusEnum.available;
         public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedDate { get; set; } = DateTime.UtcNow;
+
+        [JsonIgnore]
+        public ICollection<VechicleVariantDTO> VechicleVariants { get; set; }
     }
 }

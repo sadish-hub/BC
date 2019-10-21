@@ -6,10 +6,12 @@ import './SaveBar.css';
 const SaveBar = ({
   onDiscardAction,
   onSaveAction,
+  onFinalizeAction
 }) => (
     <div className="form-group SaveBar">
       <button onClick={onDiscardAction} className="btn btn-warning">Discard</button>
       <button onClick={onSaveAction} className="btn btn-success">Save</button>
+      {onFinalizeAction && <button onClick={onFinalizeAction} className="btn btn-primary">Finalize</button>}
     </div>
   );
 

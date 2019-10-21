@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faBook } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons'
 
 class EnquiryDashboard extends Component {
     componentDidMount() {
@@ -77,7 +77,7 @@ class EnquiryDashboard extends Component {
         ];
 
         return (<div style={{ width: "100%", height: "100%" }}>
-            <h4 className="text-info">Enquiry Dashboard <FontAwesomeIcon icon={faBook} /></h4>
+            <h4 className="text-info">Enquiry Dashboard <FontAwesomeIcon icon={faSearch} /></h4>
             <div className="form-group" style={{ textAlign: "right" }}>
                 <button onClick={this.onRedirectEnquiry} className="btn btn-primary">Add <FontAwesomeIcon icon={faPlus} /></button>
             </div>

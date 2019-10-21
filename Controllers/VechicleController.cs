@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using AutoMapper;
 using bright_choice.BusinessLogic.Interfaces;
 using bright_choice.Context.Models;
@@ -29,7 +30,8 @@ namespace bright_choice.Controllers {
         [HttpGet ("[action]")]
         public IActionResult Get (Guid Id) => Ok (vechicleRepository.GetVechicle (Id));
 
-        [HttpGet ("[action]")]
-        public IActionResult GetVechicles (string make) => Ok (vechicleRepository.GetVechicles (make));
+        [HttpPost ("[action]")]
+        [AllowAnonymous]
+        public IActionResult GetVechicles ([FromBody] IDictionary<string, string> search) => Ok (vechicleRepository.GetVechicles (search));
     }
 }

@@ -6,7 +6,9 @@ namespace bright_choice {
         public static void AddDIBinding (this IServiceCollection services) {
             services.AddScoped<ICustomerRepository, CustomerRepository> ();
             services.AddScoped<IVechicleRepository, VechicleRepository> ();
-            services.AddScoped<IEnquiryRepository, EnquiryRepository>();
+            services.AddScoped<IEnquiryRepository, EnquiryRepository> ();
+            services.AddScoped<IDailyStatusReportRepository, DailyStatusReportRepository> ();
+            services.AddScoped<IVechicleVariantRepository, VechicleVariantRepository> ();
         }
     }
 }

@@ -4,12 +4,16 @@ import { routerReducer, routerMiddleware } from 'react-router-redux';
 import customerReducer from './reducers/Customer';
 import vechicleReducer from './reducers/Vechicle';
 import enquiryReducer from './reducers/Enquiry';
+import dailyReportReducer from './reducers/DailyReport';
+import variantReducer from './reducers/Variant';
 
 export default function ConfigureStore(history, initialState) {
   const reducers = {
     customer: customerReducer,
     vechicle: vechicleReducer,
-    enquiry: enquiryReducer
+    enquiry: enquiryReducer,
+    dailyReport: dailyReportReducer,
+    variant: variantReducer
   };
 
   const middleware = [

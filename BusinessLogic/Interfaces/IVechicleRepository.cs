@@ -6,7 +6,7 @@ namespace bright_choice.BusinessLogic.Interfaces {
     {
         Vechicle Insert (Vechicle vechicle);
         Vechicle Update (Vechicle vechicle);
-        IEnumerable<Vechicle> GetVechicles (string make = null);
+        IEnumerable<Vechicle> GetVechicles (IDictionary<string, string> searchCollection);
         Vechicle GetVechicle (Guid Id);
     }
 }

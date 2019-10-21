@@ -28,19 +28,6 @@ namespace bright_choice.Context.Models {
         public Vechicle Vechicle { get; set; }
 
         [MaxLength (200)]
-        [Required]
-        public string VechicleNumber { get; set; }
-
-        [Column (TypeName = "decimal(18, 6)")]
-        public Decimal? Budget { get; set; }
-
-        [MaxLength (100)]
-        public string SellerName { get; set; }
-
-        [MaxLength (20)]
-        public string SellerContactNumber { get; set; }
-
-        [MaxLength (200)]
         public string Bank { get; set; }
 
         [Column (TypeName = "decimal(18, 6)")]
@@ -55,12 +42,6 @@ namespace bright_choice.Context.Models {
         public decimal? EMI { get; set; }
 
         public DateTime? EMIDate { get; set; }
-
-        public bool? RC { get; set; }
-
-        public bool? Insurance { get; set; }
-
-        public CarStatusEnum Status { get; set; } = CarStatusEnum.available;
 
         [DatabaseGenerated (DatabaseGeneratedOption.Identity)]
         public DateTime? CreatedDate { get; set; } = DateTime.UtcNow;

@@ -12,6 +12,18 @@ export const addEnquiryCustomer = (fieldName, fieldValue) => ({
     fieldValue
 });
 
+export const addEnquirySearch = (fieldName, fieldValue) => ({
+    type: constants.ADD_ENQUIRY_SEARCH,
+    fieldName,
+    fieldValue
+});
+
+export const addEnquiryVechicle = (enquiryValue, vechicleValue) => ({
+    type: constants.ADD_ENQUIRY_VECHICLE,
+    enquiryValue,
+    vechicleValue
+});
+
 export const setNewEnquiryEditableForm = enquiry => ({
     type: constants.SET_UP_ENQUIRY_EDIT_FORM,
     enquiry
@@ -35,6 +47,11 @@ export const searchVechiclesList = (results, term) => ({
     type: constants.SEARCH_VECHICLES,
     results,
     term
+});
+
+export const mapVechiclesList = (mapVechicles) => ({
+    type: constants.MAP_VECHICLES,
+    mapVechicles
 });
 
 export const selectCustomerList = (id = null) => ({

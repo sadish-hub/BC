@@ -49,7 +49,7 @@ export const selectCustomerList = (id = null) => ({
 });
 
 export const searchVechiclesList = (results, term) => ({
-    type: constants.SEARCH_VECHICLES,
+    type: constants.SEARCH_VECHICLENUMBERS,
     results,
     term
 });

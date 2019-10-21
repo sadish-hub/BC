@@ -10,10 +10,11 @@ import {
     searchVechiclesList,
     searchCustomersList,
     selectCustomerList,
-    enquiryDashboard
+    enquiryDashboard,
+    mapVechiclesList
 } from '../actions/EnquiryActions';
 import options from '../../components/constants/LeadType';
-import sourcingOptions from '../../components/constants/SourcingPoint';
+import inventoryOptions from '../../components/constants/CarInventory';
 import statusOptions from '../../components/constants/EnquiryStatus';
 import callStatusOptions from '../../components/constants/CallStatus';
 import axios from 'axios';
@@ -79,12 +80,40 @@ const AddUpdateEnquiry = (enquiry, dispatch) => {
         });
 }
 
-export const searchVechicles = term => async dispatch => {
+export const mapVechicles = () => (dispatch, getState) => {
     const endPoint = api.API_CONSTANT_MAP.GetVechicle;
+    const enq = getEnquiryEdit(getState());
+    let searchItems = enq.mapSearch;
+
+    let body = JSON.stringify(searchItems);
+    axios({
+        "method": "POST",
+        "url": endPoint,
+        "data": body,
+        "headers": {
+            'Content-Type': 'application/json',
+        }
+    })
+        .then((response) => {
+            console.log(response);
+            let mapItems = (response && response.data) || [];
+            mapItems = mapItems.map(j => {
+                j.inventory = filter(inventoryOptions, (item) => { if (item.value === j.inventory) return item; })[0].label;
+                j.vechicleVariantDetail = `${j.vechicleVariant.make}-${j.vechicleVariant.model}-${j.vechicleVariant.variant}`;
+                return j;
+            });
+            dispatch(mapVechiclesList((mapItems)));
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
+};
+
+export const searchVechicles = term => async dispatch => {
+    const endPoint = api.API_CONSTANT_MAP.GetVariant;
     let res = await axios.get(`${endPoint}?make=${term}`);
     dispatch(searchVechiclesList((res && res.data) || [], term));
 };
-
 
 export const searchCustomers = term => async dispatch => {
     const endPoint = api.API_CONSTANT_MAP.GetLeads;

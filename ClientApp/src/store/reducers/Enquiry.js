@@ -108,6 +108,15 @@ const viewReducer = (state = initialState.view, action) => {
 
 const editReducer = (state = initialState.edit, action) => {
     switch (action.type) {
+        case constants.MAP_VECHICLES:
+            const newMap = {
+                ...state.data
+            };
+            newMap.mapVechicles = action.mapVechicles
+            return {
+                ...state,
+                data: newMap
+            };
         case constants.GET_ENQUIRY_BY_ID:
             return {
                 ...state,
@@ -122,6 +131,19 @@ const editReducer = (state = initialState.edit, action) => {
                 ...state,
                 data: newEnquiry,
             };
+        case constants.ADD_ENQUIRY_SEARCH:
+            const newEnqSearch = {
+                ...state.data
+            };
+            if (!newEnqSearch.mapSearch) {
+                newEnqSearch.mapSearch = {};
+            }
+            newEnqSearch.mapSearch[action.fieldName] = action.fieldValue;
+            newEnqSearch[action.fieldName] = action.fieldValue;
+            return {
+                ...state,
+                data: newEnqSearch,
+            };
         case constants.ADD_ENQUIRY_CUSTOMER:
             const newEnq = {
                 ...state.data
@@ -134,6 +156,24 @@ const editReducer = (state = initialState.edit, action) => {
                 ...state,
                 data: newEnq,
             };
+        case constants.ADD_ENQUIRY_VECHICLE:
+            const newEnqV = {
+                ...state.data
+            };
+
+            newEnqV.enquiryVechicles = [];
+            let enqvech = {};
+            if (action.enquiryValue) {
+                enqvech["enquiryId"] = action.enquiryValue;
+            }
+            enqvech["vechicleId"] = action.vechicleValue;
+            newEnqV.enquiryVechicles.push(enqvech);
+            return {
+                ...state,
+                changed: true,
+                data: newEnqV,
+            };
+
         case constants.SET_UP_ENQUIRY_EDIT_FORM:
             return {
                 ...state,

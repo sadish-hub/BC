@@ -20,3 +20,19 @@ export const editVechicleSuccess = vechicle => ({
     type: constants.EDIT_FORM_VECHICLE_SUCCESS,
     vechicle
 });
+
+export const searchVechiclesList = (results, term) => ({
+    type: constants.SEARCH_VECHICLES,
+    results,
+    term
+});
+
+export const vechicleDashboard = (results) => ({
+    type: constants.VECHICLE_DASHBOARD,
+    results
+});
+
+export const getVechicleByID = (vechicle) => ({
+    type: constants.GET_VECHICLE_BY_ID,
+    vechicle
+});

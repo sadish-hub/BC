@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
-const Search = ({ items, fetchItems, selectItem, id, labelKey, title, minLength, placeholder, selected, renderMenuItemChildren }) => {
+const Search = ({ items, fetchItems, selectItem, id, labelKey, title, minLength, placeholder, selected, renderMenuItemChildren, multiple }) => {
     const [value, setValue] = useState('');
     const options = (items.search[value] || []).map(id => items.detail[id]);
     const props = {};
@@ -19,6 +19,7 @@ const Search = ({ items, fetchItems, selectItem, id, labelKey, title, minLength,
                 {...props}
                 autoFocus
                 labelKey={labelKey || "name"}
+                multiple = {multiple || false}
                 minLength={minLength || 3}
                 id={id}
                 filterBy={() => true}

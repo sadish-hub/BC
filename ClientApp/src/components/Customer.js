@@ -3,10 +3,9 @@
 import React, { Component } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import PropTypes from 'prop-types';
-import queryString from 'query-string'
+import queryString from 'query-string';
 import CheckBoxInput from './CheckBoxInput';
 import SaveBar from './SaveBar';
-import CarDetail from './CarDetail';
 import CustomerBasicDetail from './CustomerBasicDetail';
 import BankDetail from './BankDetail';
 import ViewCustomer from './ViewCustomer';
@@ -16,9 +15,9 @@ import TextInput from './TextInput';
 import { confirmAlert } from 'react-confirm-alert';
 import filter from 'lodash/filter';
 import options from './constants/CustomerType';
-import statusOptions from './constants/VechicleStatus';
+import Search from './Search';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserEdit, faBook } from '@fortawesome/free-solid-svg-icons';
+import { faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
@@ -40,9 +39,9 @@ class Customer extends Component {
             addCustomer(property, selectedOption[0].value);
         }
     };
-    handleStatusChange = (selectedOption, addCustomer, property) => {
+    handleVechicleNumberChange = (selectedOption, addCustomer, property) => {
         if (selectedOption && selectedOption.length > 0) {
-            addCustomer(property, selectedOption[0].value);
+            addCustomer(property, selectedOption[0].id);
         }
     };
     handleVechicleChange = (selectedOption, addCustomer, discardCustomerChanges, customer) => {
@@ -84,9 +83,6 @@ class Customer extends Component {
         if (this.props.customerEdit) {
             delete this.props.customerEdit.id;
         }
-        // else {
-        //     this.props.customerEdit = {};
-        // }
         this.props.addCustomer('newCustomer', true);
     };
 
@@ -97,20 +93,21 @@ class Customer extends Component {
             discardCustomerChanges,
             customerView,
             customerEdit,
-            hasCustomerChanged
+            hasCustomerChanged,
+            vechicleItems,
+            fetchVechicleItems
         } = this.props;
 
         let customerVechicleEdit = customerEdit && customerEdit.customerVechicles ?
-            filter(customerEdit.customerVechicles, (item) => { if (item.id === (customerEdit.selectedVechicleNumber || item.id)) return item; })[0] : {};
+            filter(customerEdit.customerVechicles, (item) => { if (item.vechicleId === (customerEdit.selectedVechicleNumber || item.vechicleId)) return item; })[0] : {};
         let cusType = customerVechicleEdit && customerVechicleEdit.Type ? filter(options, (item) => { if (item.value === customerVechicleEdit.type) return item; })[0] : options.slice(0, 1);
-        let vechStatus = customerVechicleEdit && customerVechicleEdit.status >= 0 ? filter(statusOptions, (item) => { if (item.value === customerVechicleEdit.status) return item; }) : [];
-        let custVechicles = customerEdit && customerEdit.customerVechicles ? customerEdit.customerVechicles : [];
+        let custVechicles = customerEdit && customerEdit.vechicles ? customerEdit.vechicles : [];
         let vechicles = custVechicles.map(o => ({
             label: o.vechicleNumber,
             value: o.id
         }));
 
-        let cusSelectedVechicleNumber = customerVechicleEdit && customerVechicleEdit.id ? filter(vechicles, (item) => { if (item.value === customerVechicleEdit.id) return item; }) : vechicles.slice(0, 1);
+        let cusSelectedVechicleNumber = customerVechicleEdit && customerVechicleEdit.id ? filter(vechicles, (item) => { if (item.value === customerVechicleEdit.vechicleId) return item; }) : vechicles.slice(0, 1);
 
         return (
 
@@ -138,22 +135,39 @@ class Customer extends Component {
                                 <div className="col-sm-2" style={{ fontWeight: "bold" }}>{(cusType && cusType[0].label) || ""}</div>
                             </div><br></br>
                         </div> :
-                        <div className="form-group">
-                            <label htmlFor="customerType">Type</label>
-                            <Typeahead
-                                id="customerType"
-                                defaultSelected={cusType}
-                                labelKey="label"
-                                options={options}
-                                placeholder="Choose a type..."
-                                onChange={value => this.handleSelectChange(value, addCustomerVechicle, discardCustomerChanges, "type")}
-                            />
+                        <div>
+                            <div className="form-group">  <Search items={vechicleItems} fetchItems={fetchVechicleItems} title="Vehicle Number"
+                                id="vechicleDetail" labelKey={(option) => `${option.vechicleNumber}`} selectItem={value => this.handleVechicleNumberChange(value, addCustomerVechicle, "vechicleId")}
+                                placeholder="Search for a Vechicle Number.." minLength={2} />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="customerType">Type</label>
+                                <Typeahead
+                                    id="customerType"
+                                    defaultSelected={cusType}
+                                    labelKey="label"
+                                    options={options}
+                                    placeholder="Choose a type..."
+                                    onChange={value => this.handleSelectChange(value, addCustomerVechicle, discardCustomerChanges, "type")}
+                                />
+                            </div>
                         </div>
                     }
-                    <CustomerBasicDetail {...this.props} onCustomerBasicAdd = {this.onCustomerBasicAdd} handleCustomerBasicSelectChange={this.handleCustomerBasicSelectChange} />
+                    <CustomerBasicDetail {...this.props} onCustomerBasicAdd={this.onCustomerBasicAdd} handleCustomerBasicSelectChange={this.handleCustomerBasicSelectChange} />
                     <OfficeDetail {...this.props} />
                     <CustomerMiscDetail {...this.props} />
-                    <CarDetail {...this.props} />
+                    <CheckBoxInput
+                        handleChange={(newValue) => addCustomer('anyOtherCar', newValue)}
+                        title="Any other car?"
+                        value={customerEdit ? customerEdit.anyOtherCar || false : false}
+                        id="anyOtherCar"
+                    />
+                    <TextInput
+                        handleChange={(newValue) => addCustomer('insuranceDetails', newValue)}
+                        title="Insurance Details"
+                        value={customerEdit ? customerEdit.insuranceDetails || '' : ''}
+                        id="insuranceDetails"
+                    />
                     {customerEdit && (customerEdit.type === 1 || customerEdit.type === 3) ?
                         <div>
                             <TextInput
@@ -169,31 +183,7 @@ class Customer extends Component {
                                 id="nextCarDetails"
                             /></div>
                         :
-                        <div>
-                            <TextInput
-                                handleChange={(newValue) => addCustomerVechicle('sellerName', newValue)}
-                                title="Seller name"
-                                value={customerVechicleEdit.sellerName || ''}
-                                id="sellerName"
-                            />
-                            <TextInput
-                                handleChange={(newValue) => addCustomerVechicle('sellerContactNumber', newValue)}
-                                title="Seller contact no."
-                                value={customerVechicleEdit.sellerContactNumber || ''}
-                                id="sellerContactNumber"
-                                type="number"
-                            />
-                            <div className="form-group">
-                                <label htmlFor="status">Status</label>
-                                <Typeahead
-                                    id="status"
-                                    labelKey="label"
-                                    options={statusOptions}
-                                    placeholder="Choose a Status..."
-                                    selected={vechStatus}
-                                    onChange={value => this.handleStatusChange(value, addCustomerVechicle, "status")}
-                                />
-                            </div>
+                        <div style={{ marginBottom: "10px" }}>
                             <div className="card">
                                 <div className="card-body">
                                     <BankDetail {...this.props} />
@@ -201,25 +191,8 @@ class Customer extends Component {
                             </div>
                         </div>
                     }
-                    <div className="card" style={{ marginBottom: "10px" }}>
-                        <div className="card-body">
-                            <h5 className="text-info">Transfer Status <FontAwesomeIcon icon={faBook} /></h5>
-                            <CheckBoxInput
-                                handleChange={(newValue) => addCustomerVechicle('rc', newValue)}
-                                title="RC"
-                                value={customerVechicleEdit.rc || false}
-                                id="rc"
-                            />
-                            <CheckBoxInput
-                                handleChange={(newValue) => addCustomerVechicle('insurance', newValue)}
-                                title="Insurance"
-                                value={customerVechicleEdit.insurance || false}
-                                id="insurance"
-                            />
-                        </div>
-                    </div>
                     {customerEdit && customerEdit.type === 1 &&
-                        <div>
+                        <div style={{ marginBottom: "10px" }}>
                             <CheckBoxInput
                                 handleChange={(newValue) => addCustomer('thankYou', newValue)}
                                 title="Thank You letter"

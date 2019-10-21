@@ -45,7 +45,7 @@ function viewReducer(state = initialState.view, action) {
 
 function searchVechicleReducer(state = initialState.vechicleSearch, action) {
     switch (action.type) {
-        case constants.SEARCH_VECHICLES:
+        case constants.SEARCH_VECHICLENUMBERS:
             const detail = {
                 ...state.detail
             };
@@ -146,7 +146,7 @@ function editReducer(state = initialState.edit, action) {
             if (newCust.customerVechicles.length > 0) {
                 if (newCust.selectedVechicleNumber) {
                     let selectedIndex = findIndex(newCust.customerVechicles,
-                        (item) => { if (item.id === newCust.selectedVechicleNumber) return item; });
+                        (item) => { if (item.vechicleId === newCust.selectedVechicleNumber) return item; });
                     newCust.customerVechicles[selectedIndex][action.fieldName] = action.fieldValue;
                 }
                 else {

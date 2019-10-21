@@ -4,6 +4,7 @@ using System.Linq;
 using bright_choice.BusinessLogic.Interfaces;
 using bright_choice.Context;
 using bright_choice.Context.Models;
+using bright_choice.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace bright_choice.BusinessLogic.Objects {
@@ -13,7 +14,8 @@ namespace bright_choice.BusinessLogic.Objects {
             context = brightChoice;
         }
 
-        public Customer GetCustomer (Guid Id) => context.Customers.Where (l => l.Id == Id).Include(j => j.CustomerVechicles).ThenInclude (k => k.Vechicle).FirstOrDefault();
+        public Customer GetCustomer (Guid Id) =>
+            context.Customers.Where (l => l.Id == Id).Include (j => j.CustomerVechicles).ThenInclude (k => k.Vechicle).ThenInclude (o => o.VechicleVariant).FirstOrDefault ();
 
         public IEnumerable<Customer> GetCustomers (int? size, int? page) {
             IQueryable<Customer> customers = null;
@@ -30,7 +32,7 @@ namespace bright_choice.BusinessLogic.Objects {
                 customers = context.Customers.Where (b =>
                     b.CustomerVechicles.Any (m => m.Type == CustomerTypeEnum.buyer || m.Type == CustomerTypeEnum.seller));
             }
-            return customers.Include (h => h.CustomerVechicles).ThenInclude (k => k.Vechicle).ToList ();
+            return customers.Include (h => h.CustomerVechicles).ThenInclude (k => k.Vechicle).ThenInclude (m => m.VechicleVariant).ToList ();
         }
 
         public IEnumerable<Customer> GetCustomersNames (string name) => String.IsNullOrEmpty (name) ?
@@ -75,7 +77,7 @@ namespace bright_choice.BusinessLogic.Objects {
             customer.OfficeAddress = cust.OfficeAddress;
             customer.OfficeEmail = cust.OfficeEmail;
             customer.OfficeLandline = cust.OfficeLandline;
-            customer.OfficeName = cust.OfficeName ;
+            customer.OfficeName = cust.OfficeName;
             customer.Religion = cust.Religion;
             customer.ServiceDetails = cust.ServiceDetails;
             customer.ThankYou = cust.ThankYou;
@@ -86,18 +88,25 @@ namespace bright_choice.BusinessLogic.Objects {
                 var vech = context.CustomerVechicles.Find (cusVech.Id);
                 vech.Bank = cusVech.Bank;
                 vech.BankAccNo = cusVech.BankAccNo;
-                vech.Budget = cusVech.Budget;
                 vech.EMI = cusVech.EMI;
                 vech.EMIDate = cusVech.EMIDate;
-                vech.Insurance = cusVech.Insurance;
                 vech.LoanAmount = cusVech.LoanAmount;
-                vech.RC = cusVech.RC;
-                vech.SellerContactNumber = cusVech.SellerContactNumber;
-                vech.SellerName = cusVech.SellerName;
-                vech.Status = cusVech.Status;
                 vech.Tenor = cusVech.Tenor;
                 vech.UpdatedDate = DateTime.UtcNow;
-                vech.VechicleNumber = cusVech.VechicleNumber;
+
+                // var vechicle = context.Vechicles.Find (cusVech.VechicleId);
+                // vechicle.Budget = cusVech.Vechicle.Budget;
+                // vechicle.Insurance = cusVech.Vechicle.Insurance;
+                // vechicle.Inventory = cusVech.Vechicle.Inventory;
+                // vechicle.Kilometer = cusVech.Vechicle.Kilometer;
+                // vechicle.RC = cusVech.Vechicle.RC;
+                // vechicle.Registration = cusVech.Vechicle.Registration;
+                // vechicle.SellerContactNumber = cusVech.Vechicle.SellerContactNumber;
+                // vechicle.SellerName = cusVech.Vechicle.SellerName;
+                // vechicle.Status = cusVech.Vechicle.Status;
+                // vechicle.VechicleNumber = cusVech.Vechicle.VechicleNumber;
+                // vechicle.Year = cusVech.Vechicle.Year;
+                // vechicle.UpdatedDate = DateTime.UtcNow;
             }
 
             context.SaveChanges ();

@@ -6,7 +6,7 @@ import { faLandmark } from '@fortawesome/free-solid-svg-icons'
 import filter from 'lodash/filter';
 
 const BankDetail = ({ addCustomerVechicle, customerEdit }) => {
-    let customerVechicleEdit = customerEdit && customerEdit.customerVechicles ? filter(customerEdit.customerVechicles, (item) => { if (item.id === (customerEdit.selectedVechicleNumber || item.id)) return item; })[0] : {};
+    let customerVechicleEdit = customerEdit && customerEdit.customerVechicles ? filter(customerEdit.customerVechicles, (item) => { if (item.vechicleId === (customerEdit.selectedVechicleNumber || item.vechicleId)) return item; })[0] : {};
     return (
         <div>
             <h5 className="text-info">Loan Details <FontAwesomeIcon icon={faLandmark} /></h5>

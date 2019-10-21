@@ -32,8 +32,8 @@ export function setupCustomer(id) {
   }
 }
 
-export function getSelectedCustomerList(customer){
-  return function _getSelectedCustomer(dispatch, getState){
+export function getSelectedCustomerList(customer) {
+  return function _getSelectedCustomer(dispatch, getState) {
     const cust = getCustomerEdit(getState());
     customer.selectedVechicleNumber = cust.selectedVechicleNumber || "";
     dispatch(getCustomerByID(customer));
@@ -67,7 +67,7 @@ const getCustomerById = (id, dispatch) => {
   axios.get(`${endPoint}?Id=${id}`)
     .then(res => {
       let customer = res.data;
-      customer.vechicleNumbers = customer.customerVechicles.map(v => v.vechicleNumber).join(", ");
+      customer.vechicleNumbers = customer.vechicles.map(v => v.vechicleNumber).join(", ");
       customer.isEdit = true;
       customer.newCustomer = true;
       customer.dob = customer.dob ? new Date(customer.dob).toLocaleDateString().split(/\//).reverse().join('-') : customer.dob;
@@ -88,8 +88,8 @@ export const getCustomerDashboard = () => dispatch => {
     .then(res => {
       let customers = res.data;
       customers = customers.map(j => {
-        j.vechicleDetails = j.vechicles.map(e => `${e.make} ${e.model} ${e.variant}`).join(", ");
-        j.vechicleNumbers = j.customerVechicles.map(v => v.vechicleNumber).join(", ");
+        j.vechicleDetails = j.vechicles.map(e => `${e.vechicleVariant.make} ${e.vechicleVariant.model} ${e.vechicleVariant.variant}`).join(", ");
+        j.vechicleNumbers = j.vechicles.map(v => v.vechicleNumber).join(", ");
         j.custId = `${j.acFormat}-${j.acNo}`
         j.religion = filter(religionOptions, (item) => { if (item.value === j.religion) return item; })[0].label;
         j.native = filter(nativeOptions, (item) => { if (item.value === j.native) return item; })[0].label;
@@ -113,8 +113,25 @@ export const selectCustomer = (id = null) => dispatch => dispatch(selectCustomer
 
 export const searchVechicles = term => async dispatch => {
   const endPoint = api.API_CONSTANT_MAP.GetVechicle;
-  let res = await axios.get(`${endPoint}?make=${term}`);
-  dispatch(searchVechiclesList((res && res.data) || [], term));
+
+  let search = {};
+  search['vechicleNumber'] = term;
+  let body = JSON.stringify(search);
+  axios({
+    "method": "POST",
+    "url": endPoint,
+    "data": body,
+    "headers": {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then((response) => {
+      console.log(response);
+      dispatch(searchVechiclesList((response && response.data) || [], term));
+    })
+    .catch((error) => {
+      console.warn(error);
+    });
 };
 
 export function saveCustomer() {

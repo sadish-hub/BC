@@ -14,9 +14,10 @@ import CustomerBasicDetail from './CustomerBasicDetail';
 import { Highlighter } from 'react-bootstrap-typeahead';
 import filter from 'lodash/filter';
 import { confirmAlert } from 'react-confirm-alert';
+import { AgGridReact } from 'ag-grid-react';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCar } from '@fortawesome/free-solid-svg-icons';
 
 class Enquiry extends Component {
 
@@ -44,6 +45,8 @@ class Enquiry extends Component {
         });
     };
 
+    onSearchAction = () => this.props.mapVechicles();
+
     handleSelectChange = (selectedOption, addEnquiry, property) => {
         if (selectedOption && selectedOption.length > 0) {
             console.log(`Option selected:`, selectedOption);
@@ -59,6 +62,14 @@ class Enquiry extends Component {
         }
     };
 
+    handleSearchChange = (item) => {
+        if(item){
+            this.props.addEnquiry('vechicleVariant', item);
+            var ids = item.map(j => j.id).join(",");
+            this.props.addEnquirySearch('selectedVariantIds', ids);
+        }
+    };
+
     onCustomerBasicAdd = () => {
         if (this.props.enquiryEdit) {
             delete this.props.enquiryEdit.customerId;
@@ -67,6 +78,20 @@ class Enquiry extends Component {
         //     this.props.enquiryEdit = {};
         // }
         this.props.addEnquiryCustomer('newCustomer', true);
+    };
+
+    onGridReady = params => {
+        this.gridApi = params.api;
+        this.gridColumnApi = params.columnApi;
+
+        params.api.sizeColumnsToFit();
+        window.addEventListener("resize", function () {
+            setTimeout(function () {
+                params.api.sizeColumnsToFit();
+            });
+        });
+
+        params.api.sizeColumnsToFit();
     };
 
     renderMenuItemChildren = (option, props, index) => {
@@ -83,12 +108,7 @@ class Enquiry extends Component {
                 <small>
                     Variant: {option.variant}
                 </small>
-            </div>,
-            <div key="year">
-                <small>
-                    Year: {option.year}
-                </small>
-            </div>,
+            </div>
         ];
     }
 
@@ -97,7 +117,7 @@ class Enquiry extends Component {
             addEnquiry,
             addEnquiryCustomer,
             discardEnquiryChanges,
-            enquiryView,
+            addEnquirySearch,
             enquiryEdit,
             vechicleItems,
             fetchVechicleItems
@@ -107,12 +127,28 @@ class Enquiry extends Component {
         let sourcingType = enquiryEdit && enquiryEdit.sourcingPoint ? filter(sourcingOptions, (item) => { if (item.value === enquiryEdit.sourcingPoint) return item; }) : [];
         let enquiryStatus = enquiryEdit && enquiryEdit.status ? filter(statusOptions, (item) => { if (item.value === enquiryEdit.status) return item; }) : [];
         let callStatus = enquiryEdit && enquiryEdit.callStatus ? filter(callStatusOptions, (item) => { if (item.value === enquiryEdit.callStatus) return item; }) : [];
+        let selectedVechicle = enquiryEdit && enquiryEdit.vechicleVariant ? enquiryEdit.vechicleVariant : [];
+
+        let columnDefs = [{
+            headerName: "Vechicle Number", field: "vechicleNumber", checkboxSelection: true, sortable: true, filter: true, resizable: true, width: 300
+        },
+        {
+            headerName: "Inventory", field: "inventory", sortable: true, filter: true, resizable: true, width: 200
+        },
+        {
+            headerName: "Variant", field: "vechicleVariantDetail", sortable: true, filter: true, resizable: true, width: 300
+        }
+        ];
+
+        let vechicleListItems = enquiryEdit && enquiryEdit.mapVechicles || [];
+        
+        // [{"vechicleNumber" : "Test", "inventory":"testinv","vechicleVariantDetail" : "Maruti"},
+        // {"vechicleNumber" : "Rest", "inventory":"restinv","vechicleVariantDetail" : "Maruti"},];
 
         return (
             <div style={{ width: "90%" }}>
-                <h4 className="text-info">Add/Edit Enquiry <FontAwesomeIcon icon={faEdit} /></h4>
+                <h4 className="text-info">Add/Edit Enquiry <FontAwesomeIcon icon={faSearch} /></h4>
                 <br></br>
-
                 {
                     enquiryEdit && enquiryEdit.isEdit ?
                         <div> <div className="row">
@@ -137,7 +173,7 @@ class Enquiry extends Component {
                     value={enquiryEdit ? enquiryEdit.assignee : ''}
                     id="assignee"
                 />
-                <CustomerBasicDetail addCustomer={addEnquiryCustomer} onCustomerBasicAdd={this.onCustomerBasicAdd} customerEdit={(enquiryEdit && enquiryEdit.customer)|| {}} handleCustomerBasicSelectChange={this.handleCustomerBasicSelectChange} {...this.props} />
+                <CustomerBasicDetail addCustomer={addEnquiryCustomer} onCustomerBasicAdd={this.onCustomerBasicAdd} customerEdit={(enquiryEdit && enquiryEdit.customer) || {}} handleCustomerBasicSelectChange={this.handleCustomerBasicSelectChange} {...this.props} />
                 <div className="form-group">
                     <label htmlFor="sourcingType">Sourcing point</label>
                     <Typeahead
@@ -157,27 +193,76 @@ class Enquiry extends Component {
                             <div className="col-sm-4" style={{ fontWeight: "bold" }}>{enquiryEdit.vechicle.make ? `${enquiryEdit.vechicle.make} - ${enquiryEdit.vechicle.model} - ${enquiryEdit.vechicle.variant} - ${enquiryEdit.vechicle.year}` : ""}</div>
                         </div> <br></br></div>
                 }
-                <Search items={vechicleItems} fetchItems={fetchVechicleItems} title="Car Details"
-                    id="vechicleDetail" labelKey={(option) => `${option.make} ${option.model} ${option.variant}`} selectItem={([item]) => addEnquiry("vechicleId", item.id)}
-                    placeholder="Search for a Vechicle.." minLength={2} renderMenuItemChildren={this.renderMenuItemChildren} />
+
+
+                <div className="card" style={{ marginBottom: "10px" }}>
+                    <div className="card-body">
+                        <h5 className="text-info">Search Vechicle <FontAwesomeIcon icon={faCar} /></h5>
+
+                        <Search items={vechicleItems} multiple={true} fetchItems={fetchVechicleItems} title="Car Details"
+                            id="vechicleDetail" labelKey={(option) => `${option.make} ${option.model} ${option.variant}`} selectItem={(selected) => {console.log(selected);this.handleSearchChange(selected, addEnquiry)}} /*selectItem={([item]) => console.log([item])addEnquiry("vechicleId", item.id)}*/
+                            placeholder="Search for a Vechicle.." selected={selectedVechicle} minLength={2} renderMenuItemChildren={this.renderMenuItemChildren} />
+
+                        <TextInput
+                            handleChange={(newValue) => addEnquirySearch('year', newValue)}
+                            title="Year"
+                            value={enquiryEdit ? enquiryEdit.year : ''}
+                            id="year"
+                            type="number"
+                        />
+                        <TextInput
+                            handleChange={(newValue) => addEnquirySearch('kilometer', newValue)}
+                            title="Kilometer"
+                            value={enquiryEdit ? enquiryEdit.kilometer : ''}
+                            id="kilometer"
+                            type="number"
+                        />
+                        <TextInput
+                            handleChange={(newValue) => addEnquirySearch('registration', newValue)}
+                            title="Registration"
+                            value={enquiryEdit ? enquiryEdit.registration : ''}
+                            id="registration"
+                            type="number"
+                        />
+                        <TextInput
+                            handleChange={(newValue) => addEnquirySearch('budget', newValue)}
+                            title="Budget"
+                            value={enquiryEdit ? enquiryEdit.budget : ''}
+                            id="budget"
+                            type="number"
+                        />
+                        <div className="form-group SaveBar">
+                            <button onClick={this.onSearchAction} className="btn btn-info">Search</button>
+                        </div>
+                        <div>
+                            <h5 className="text-info">Available Vechicle </h5>
+
+                            <div style={{ display: "flex", flexDirection: "row" }}>
+                                <div style={{ overflow: "hidden", flexGrow: "1" }}>
+                                    <div
+                                        id="myGrid"
+                                        style={{
+                                            height: "200px",
+                                            width: "80%"
+                                        }}
+                                        className="ag-theme-blue">
+                                        <AgGridReact
+                                            onGridReady={this.onGridReady}
+                                            rowSelection="single"
+                                            columnDefs={columnDefs}
+                                            rowData={vechicleListItems || []}>
+                                        </AgGridReact>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <TextInput
                     handleChange={(newValue) => addEnquiry('exactRequirement', newValue)}
                     title="Exact Requirement"
                     value={enquiryEdit ? enquiryEdit.exactRequirement : ''}
                     id="exactRequirement"
-                />
-                <TextInput
-                    handleChange={(newValue) => addEnquiry('alternateCar', newValue)}
-                    title="Alternate Car"
-                    value={enquiryEdit ? enquiryEdit.alternateCar : ''}
-                    id="alternateCar"
-                />
-                <TextInput
-                    handleChange={(newValue) => addEnquiry('budget', newValue)}
-                    title="Budget"
-                    value={enquiryEdit ? enquiryEdit.budget : ''}
-                    id="budget"
-                    type="number"
                 />
                 <div className="form-group">
                     <label htmlFor="status">Status</label>
@@ -225,6 +310,7 @@ class Enquiry extends Component {
                 <SaveBar
                     onDiscardAction={discardEnquiryChanges}
                     onSaveAction={this.saveRedirectDashboard}
+                    onFinalizeAction={this.saveRedirectDashboard}
                 />
             </div>
         );

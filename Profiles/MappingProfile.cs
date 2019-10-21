@@ -14,8 +14,14 @@ namespace bright_choice.Profiles {
             CreateMap<Vechicle, VechicleDTO> ();
             CreateMap<VechicleDTO, Vechicle> ();
 
+            CreateMap<VechicleVariant, VechicleVariantDTO> ();
+            CreateMap<VechicleVariantDTO, VechicleVariant> ();
+
             CreateMap<Enquiry, EnquiryDTO> ();
             CreateMap<EnquiryDTO, Enquiry> ();
+
+            CreateMap<DailyStatusReport, DailyStatusReportDTO> ();
+            CreateMap<DailyStatusReportDTO, DailyStatusReport> ();
         }
     }
 }

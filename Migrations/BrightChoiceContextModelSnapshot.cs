@@ -15,7 +15,7 @@ namespace bright_choice.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("ProductVersion", "3.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -23,65 +23,88 @@ namespace bright_choice.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
                     b.Property<string>("ACFormat")
                         .IsRequired()
+                        .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.Property<int>("ACNo");
+                    b.Property<int>("ACNo")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("AnyOtherCar");
+                    b.Property<bool?>("AnyOtherCar")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DOB");
+                    b.Property<DateTime?>("DOB")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EmailId")
+                        .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("InsuranceDetails")
+                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
                     b.Property<string>("LandlineNumber")
+                        .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("MobileNumber")
+                        .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int>("Native");
+                    b.Property<int>("Native")
+                        .HasColumnType("int");
 
                     b.Property<string>("NextCarDetails")
+                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<string>("OfficeAddress");
+                    b.Property<string>("OfficeAddress")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OfficeEmail")
+                        .HasColumnType("nvarchar(255)")
                         .HasMaxLength(255);
 
                     b.Property<string>("OfficeLandline")
+                        .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("OfficeName")
+                        .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<int>("Religion");
+                    b.Property<int>("Religion")
+                        .HasColumnType("int");
 
                     b.Property<string>("ServiceDetails")
+                        .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<bool?>("ThankYou");
+                    b.Property<bool?>("ThankYou")
+                        .HasColumnType("bit");
 
-                    b.Property<DateTime?>("UpdatedDate");
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("WeddingAnniversary");
+                    b.Property<DateTime?>("WeddingAnniversary")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -92,56 +115,45 @@ namespace bright_choice.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
                     b.Property<string>("Bank")
+                        .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("BankAccNo")
+                        .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<decimal?>("Budget")
-                        .HasColumnType("decimal(18, 6)");
-
                     b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CustomerId");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("EMI")
                         .HasColumnType("decimal(18, 6)");
 
-                    b.Property<DateTime?>("EMIDate");
-
-                    b.Property<bool?>("Insurance");
+                    b.Property<DateTime?>("EMIDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<decimal?>("LoanAmount")
                         .HasColumnType("decimal(18, 6)");
 
-                    b.Property<bool?>("RC");
+                    b.Property<int?>("Tenor")
+                        .HasColumnType("int");
 
-                    b.Property<string>("SellerContactNumber")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("SellerName")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("Status")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("0");
-
-                    b.Property<int?>("Tenor");
-
-                    b.Property<int>("Type");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedDate")
-                        .ValueGeneratedOnAddOrUpdate();
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("VechicleId");
-
-                    b.Property<string>("VechicleNumber")
-                        .IsRequired()
-                        .HasMaxLength(200);
+                    b.Property<Guid>("VechicleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -152,85 +164,256 @@ namespace bright_choice.Migrations
                     b.ToTable("CustomerVechicles");
                 });
 
+            modelBuilder.Entity("bright_choice.Context.Models.DailyStatusReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DealerCall")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Executive")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<int?>("FreshCall")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InfoVia")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MoreThan30Days")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NoOfAdvanceRecd")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NoOfAppointment")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("NoOfCarsSold")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OldCall")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalCall")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TotalNoOfCar")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("WebStatus")
+                        .HasColumnType("nvarchar(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool?>("WithPhotos")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DailyStatusReports");
+                });
+
             modelBuilder.Entity("bright_choice.Context.Models.Enquiry", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
                     b.Property<string>("AlternateCar")
+                        .HasColumnType("nvarchar(1000)")
                         .HasMaxLength(1000);
 
-                    b.Property<string>("Assignee");
+                    b.Property<string>("Assignee")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Budget")
                         .HasColumnType("decimal(18, 6)");
 
-                    b.Property<int>("CallStatus");
+                    b.Property<int>("CallStatus")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Comments");
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CustomerId");
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ExactRequirement")
+                        .HasColumnType("nvarchar(2000)")
                         .HasMaxLength(2000);
 
-                    b.Property<string>("History");
+                    b.Property<string>("History")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LeadType");
+                    b.Property<int?>("Kilometer")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime?>("NextFollowUp");
+                    b.Property<int>("LeadType")
+                        .HasColumnType("int");
 
-                    b.Property<bool>("ProvidedDetails");
+                    b.Property<DateTime?>("NextFollowUp")
+                        .HasColumnType("datetime2");
 
-                    b.Property<int>("SourcingPoint");
+                    b.Property<bool>("ProvidedDetails")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("Status");
+                    b.Property<string>("Registration")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UpdatedDate");
+                    b.Property<int>("SourcingPoint")
+                        .HasColumnType("int");
 
-                    b.Property<Guid>("VechicleId");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
 
+                    b.ToTable("Enquiries");
+                });
+
+            modelBuilder.Entity("bright_choice.Context.Models.EnquiryVechicle", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("EnquiryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VechicleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EnquiryId");
+
                     b.HasIndex("VechicleId");
 
-                    b.ToTable("Enquiries");
+                    b.ToTable("EnquiryVechicles");
                 });
 
             modelBuilder.Entity("bright_choice.Context.Models.Vechicle", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("newid()");
+
+                    b.Property<decimal?>("Budget")
+                        .HasColumnType("decimal(18, 6)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Insurance")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Inventory")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Kilometer")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("RC")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Registration")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SellerContactNumber")
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("SellerName")
+                        .HasColumnType("nvarchar(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("0");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VechicleNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.Property<Guid>("VechicleVariantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int?>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VechicleVariantId");
+
+                    b.ToTable("Vechicles");
+                });
+
+            modelBuilder.Entity("bright_choice.Context.Models.VechicleVariant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("newid()");
 
                     b.Property<DateTime?>("CreatedDate")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Inventory");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Make")
                         .IsRequired()
+                        .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
                     b.Property<string>("Model")
                         .IsRequired()
+                        .HasColumnType("nvarchar(200)")
                         .HasMaxLength(200);
 
-                    b.Property<DateTime?>("UpdatedDate");
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Variant");
-
-                    b.Property<int?>("Year");
+                    b.Property<string>("Variant")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vechicles");
+                    b.ToTable("VechicleVariants");
                 });
 
             modelBuilder.Entity("bright_choice.Context.Models.CustomerVechicle", b =>
@@ -238,12 +421,14 @@ namespace bright_choice.Migrations
                     b.HasOne("bright_choice.Context.Models.Customer", "Customer")
                         .WithMany("CustomerVechicles")
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("bright_choice.Context.Models.Vechicle", "Vechicle")
                         .WithMany("CustomerVechicles")
                         .HasForeignKey("VechicleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("bright_choice.Context.Models.Enquiry", b =>
@@ -251,12 +436,32 @@ namespace bright_choice.Migrations
                     b.HasOne("bright_choice.Context.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("bright_choice.Context.Models.EnquiryVechicle", b =>
+                {
+                    b.HasOne("bright_choice.Context.Models.Enquiry", "Enquiry")
+                        .WithMany("EnquiryVechicles")
+                        .HasForeignKey("EnquiryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("bright_choice.Context.Models.Vechicle", "Vechicle")
-                        .WithMany()
+                        .WithMany("EnquiryVechicles")
                         .HasForeignKey("VechicleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("bright_choice.Context.Models.Vechicle", b =>
+                {
+                    b.HasOne("bright_choice.Context.Models.VechicleVariant", "VechicleVariant")
+                        .WithMany()
+                        .HasForeignKey("VechicleVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
